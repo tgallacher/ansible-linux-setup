@@ -28,6 +28,19 @@
         state: latest
         update_cache: yes
 
+    - name: Install antibody plugin
+      block:
+      - name: check if it is already installed
+        ansible.builtin.stat:
+          path: /usr/bin/antibody
+        register: stat_result
+
+      - name: Fetch from Github
+        ansible.builtin.shell:
+          cmd: curl -sfL git.io/antibody | sh -s - -b /usr/local/bin
+          executable: /bin/bash
+        when: not stat_result.stat.exists
+
     # Based on geerlingguy.dotfiles
     - name: Set up dotfiles
       block:
