@@ -81,12 +81,18 @@
           with_items: "{{ dotfiles_files }}"
 
     - name: Install fonts
-      become: yes
-      ansible.builtin.file:
-        src: "{{ ansible_user_dir }}/.config/.fonts"
-        dest: "/usr/share/fonts/ansible-install"
-        state: link
-        mode: "u=rwX,g=rX,o=rX"
+      block:
+        - name: Copy font files
+          become: yes
+          ansible.builtin.file:
+            src: "{{ ansible_user_dir }}/.config/.fonts"
+            dest: "/usr/share/fonts/ansible-install"
+            state: link
+            mode: "u=rwX,g=rX,o=rX"
+
+        - name: Reload font cache
+          ansible.builtin.shell:
+            cmd: fc-cache -v
 
 
 
