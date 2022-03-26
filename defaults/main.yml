@@ -6,6 +6,7 @@ pacman_packages_to_install:
   - flameshot
   - hsetroot
   - nvm
+  - physlock
   - polybar
   - pyenv
   - redshift
