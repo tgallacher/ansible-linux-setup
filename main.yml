@@ -79,26 +79,3 @@
             state: link
             mode: "u=rwX,g=rX,o=rX"
           with_items: "{{ dotfiles_files }}"
-
-    - name: Install fonts
-      block:
-        - name: Copy font files
-          become: yes
-          ansible.builtin.file:
-            src: "{{ ansible_user_dir }}/.config/.fonts"
-            dest: "/usr/share/fonts/ansible-install"
-            state: link
-            mode: "u=rwX,g=rX,o=rX"
-
-        - name: Reload font cache
-          ansible.builtin.shell:
-            cmd: fc-cache -v
-
-
-
-
-# Install required packages
-# Sync .dotfiles repo
-# Symlink all specific files to .dotfiles repo
-#   make sure not to override pre-exisitng files in any config dirs
-#   e.g. can't just symlink the config/ dir; need to do the files inside
