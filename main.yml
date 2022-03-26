@@ -1,0 +1,82 @@
+---
+- hosts: localhost
+  collections:
+    - community.general
+
+
+  vars_files:
+    - defaults/main.yml
+    - defaults/dotfiles.yml
+
+  pre_tasks:
+    # Allows for the separation of custom config overrides files.
+    # This will override any config vars set in the "defaults/*.yml" files.
+    #
+    # Create "config*.yml" files, or keep them all in a single "config.yml" file.
+    - include_vars: "{{ item }}"
+      with_fileglob:
+        - "{{ playbook_dir }}/config*.yml"
+        - wantlist=True
+      tags: ["always"]
+
+  roles: []
+
+  tasks:
+    - name: Install required packages
+      community.general.pacman:
+        name: {{ pacman_packages_to_install }}
+        state: latest
+        update_cache: yes
+
+    # Based on geerlingguy.dotfiles
+    - name: Set up dotfiles
+      block:
+        - name: Ensure dotfiles repository is cloned locally.
+          become: false
+          git:
+            repo: "{{ dotfiles_repo }}"
+            dest: "{{ dotfiles_repo_local_destination }}"
+            version: "{{ dotfiles_repo_version }}"
+            accept_hostkey: "{{ dotfiles_repo_accept_hostkey }}"
+
+        - name: Ensure all configured dotfiles are links.
+          command: "ls -aF {{ dotfiles_home }}/{{ item }}"
+          register: existing_dotfile_info
+          failed_when: false
+          check_mode: false
+          changed_when: false
+          with_items: "{{ dotfiles_files }}"
+
+        - name: Remove existing dotfiles file if a replacement is being linked.
+          ansible.builtin.file:
+            path: "{{ dotfiles_home }}/{{ dotfiles_files[item.0] }}"
+            state: absent
+          when: "'@' not in item.1.stdout"
+          with_indexed_items: "{{ existing_dotfile_info.results }}"
+          loop_control:
+            label: "{{ dotfiles_files[item.0] }}"
+
+        - name: Link dotfiles into home folder.
+          become: false
+          ansible.builtin.file:
+            src: "{{ dotfiles_repo_local_destination }}/{{ item }}"
+            dest: "{{ dotfiles_home }}/{{ item }}"
+            state: link
+            mode: "u=rwX,g=rX,o=rX"
+          with_items: "{{ dotfiles_files }}"
+
+    - name: Install fonts
+      ansible.builtin.file:
+        src: "{{ dotfiles_home }}/.config/.fonts"
+        dest: "/usr/share/fonts/ansible-install"
+        state: link
+        mode: "u=rwX,g=rX,o=rX"
+
+
+
+
+# Install required packages
+# Sync .dotfiles repo
+# Symlink all specific files to .dotfiles repo
+#   make sure not to override pre-exisitng files in any config dirs
+#   e.g. can't just symlink the config/ dir; need to do the files inside

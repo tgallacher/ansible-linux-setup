@@ -1,0 +1,23 @@
+pacman_packages_to_install:
+  - alacritty
+  - bspwm
+  - compton
+  - dunst
+  - hsetroot
+  - nvm
+  - polybar
+  - pyenv
+  - rofi
+  - redshift
+  - scrot
+  - slop
+  - sxhkd
+  - sxhkd
+  - xdo
+  - xorg-xrdb
+  - xorg-xset
+  - xorg-xsetroot
+  - xsel
+  - xsettingsd
+  - xsettingsd
+  - xtitle
