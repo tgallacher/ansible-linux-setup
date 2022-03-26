@@ -3,12 +3,13 @@ pacman_packages_to_install:
   - bspwm
   - compton
   - dunst
+  - flameshot
   - hsetroot
   - nvm
   - polybar
   - pyenv
-  - rofi
   - redshift
+  - rofi
   - scrot
   - slop
   - sxhkd
