@@ -15,6 +15,7 @@ pacman_packages_to_install:
   - slop
   - sxhkd
   - sxhkd
+  - ttf-jetbrains-mono
   - xdo
   - xorg-xrdb
   - xorg-xset
