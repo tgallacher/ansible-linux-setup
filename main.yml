@@ -23,8 +23,9 @@
 
   tasks:
     - name: Install required packages
+      become: yes
       community.general.pacman:
-        name: {{ pacman_packages_to_install }}
+        name: "{{ pacman_packages_to_install }}"
         state: latest
         update_cache: yes
 
@@ -79,8 +80,9 @@
           with_items: "{{ dotfiles_files }}"
 
     - name: Install fonts
+      become: yes
       ansible.builtin.file:
-        src: "{{ dotfiles_home }}/.config/.fonts"
+        src: "{{ ansible_user_dir }}/.config/.fonts"
         dest: "/usr/share/fonts/ansible-install"
         state: link
         mode: "u=rwX,g=rX,o=rX"

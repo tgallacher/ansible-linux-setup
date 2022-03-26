@@ -17,7 +17,7 @@ dotfiles_files:
   - .config/nvim
   - .config/polybar
   - .config/sxhkd
-  - .config/xsettings
+  - .config/xsettingsd
   - .config/zsh
   - .config/.fonts
   - .config/.colors
