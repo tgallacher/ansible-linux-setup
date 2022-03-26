@@ -42,7 +42,7 @@
           executable: /bin/bash
         when: not stat_result.stat.exists
 
-    # Based on geerlingguy.dotfiles
+    # B ased on geerlingguy.dotfiles
     - name: Set up dotfiles
       block:
         - name: Ensure dotfiles repository is cloned locally.
@@ -80,8 +80,29 @@
             mode: "u=rwX,g=rX,o=rX"
           with_items: "{{ dotfiles_files }}"
 
-    - name: install fontawesome icons
-      ansible.builtin.unarchive:
-        src: https://use.fontawesome.com/releases/v6.1.1/fontawesome-free-6.1.1-desktop.zip
-        dest: "usr/share/icons/fontawesome"
-        remote_src: yes
+    - name: Install fontawesome icons
+      become: yes
+      block:
+      - name: ensure icon folder exists
+        ansible.builtin.file:
+          path: /usr/share/icons/fontawesome
+          state: directory
+
+      - name: download zip
+        ansible.builtin.unarchive:
+          src: https://use.fontawesome.com/releases/v6.1.1/fontawesome-free-6.1.1-desktop.zip
+          dest: /tmp/
+          remote_src: yes
+
+      - name: download and unpack into icon folder
+        ansible.posix.synchronize:
+          src: /tmp/fontawesome-free-6.1.1-desktop/
+          dest: /usr/share/icons/fontawesome/
+          delete: yes
+          recursive: yes
+        delegate_to: localhost
+
+      - name: clean up tmp download dir
+        ansible.builtin.file:
+          path: /tmp/fontawesome-free-6.1.1-desktop
+          state: absent

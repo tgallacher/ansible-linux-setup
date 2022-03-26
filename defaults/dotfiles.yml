@@ -6,10 +6,14 @@ dotfiles_repo_accept_hostkey: yes
 dotfiles_repo_local_destination: ~/.ansible-dotfiles-sync
 dotfiles_home: "~"
 dotfiles_files:
-  - .zshenv
-  - .xinitrc
   - .gitconfig
   - .gitignore
+  - .xinitrc
+  - .zshenv
+  # Spell out config child dirs directly to avoid overriding any manual config added
+  # by not installing an app through this automation script
+  - .config/.colors
+  - .config/.fonts
   - .config/.scripts
   - .config/alacritty
   - .config/bspwm
@@ -17,7 +21,6 @@ dotfiles_files:
   - .config/nvim
   - .config/polybar
   - .config/sxhkd
+  - .config/wget
   - .config/xsettingsd
   - .config/zsh
-  - .config/.fonts
-  - .config/.colors
