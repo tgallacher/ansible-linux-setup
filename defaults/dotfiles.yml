@@ -22,5 +22,6 @@ dotfiles_files:
   - .config/polybar
   - .config/sxhkd
   - .config/wget
+  - .config/wall.jpg
   - .config/xsettingsd
   - .config/zsh
