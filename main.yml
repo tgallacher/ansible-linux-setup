@@ -129,3 +129,6 @@
           group: "{{ ansible_user_id }}"
           owner: "{{ ansible_user_id }}"
           recurse: yes
+
+    - name: Reload font cache
+      command: fc-cache -r
