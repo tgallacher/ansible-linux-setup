@@ -80,29 +80,46 @@
             mode: "u=rwX,g=rX,o=rX"
           with_items: "{{ dotfiles_files }}"
 
+        - name: Install fonts
+          block:
+            - name: Ensure the home fonts dir is present
+              ansible.builtin.file:
+                src: "{{  ansible_user_dir }}/.local/share/fonts"
+                state: directory
+
+            - name: Copy font files
+              delegate_to: localhost
+              ansible.posix.synchronize:
+                src: "{{ dotfiles_repo_local_destination }}/.config/.fonts/"
+                dest: "{{ ansible_user_dir }}/.local/share/fonts/"
+                delete: no
+                recursive: yes
+
     - name: Install fontawesome icons
       become: yes
       block:
-      - name: ensure icon folder exists
+      - name: ensure folder exists
         ansible.builtin.file:
-          path: /usr/share/icons/fontawesome
+          path: "{{ ansible_user_dir }}/.local/share/fonts/fontawesome"
           state: directory
+        register: fontawesome_dir_result
 
       - name: download zip
         ansible.builtin.unarchive:
           src: https://use.fontawesome.com/releases/v6.1.1/fontawesome-free-6.1.1-desktop.zip
           dest: /tmp/
           remote_src: yes
+        register: fontawesome_zip_result
 
       - name: download and unpack into icon folder
+        delegate_to: localhost
         ansible.posix.synchronize:
-          src: /tmp/fontawesome-free-6.1.1-desktop/
-          dest: /usr/share/icons/fontawesome/
+          src: "{{ fontawesome_zip_result.unarchive.dest }}/"
+          dest: "{{ fontawesome_dir_result.file.path }}/"
           delete: yes
           recursive: yes
-        delegate_to: localhost
 
       - name: clean up tmp download dir
         ansible.builtin.file:
-          path: /tmp/fontawesome-free-6.1.1-desktop
+          path: "{{ fontawesome_zip_result.unarchive.dest }}"
           state: absent

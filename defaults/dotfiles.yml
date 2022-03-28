@@ -13,7 +13,6 @@ dotfiles_files:
   # Spell out config child dirs directly to avoid overriding any manual config added
   # by not installing an app through this automation script
   - .config/.colors
-  - .config/.fonts
   - .config/.scripts
   - .config/alacritty
   - .config/bspwm
