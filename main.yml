@@ -84,7 +84,7 @@
           block:
             - name: Ensure the home fonts dir is present
               ansible.builtin.file:
-                src: "{{  ansible_user_dir }}/.local/share/fonts"
+                path: "{{ ansible_user_dir }}/.local/share/fonts"
                 state: directory
 
             - name: Copy font files
@@ -109,17 +109,23 @@
           src: https://use.fontawesome.com/releases/v6.1.1/fontawesome-free-6.1.1-desktop.zip
           dest: /tmp/
           remote_src: yes
-        register: fontawesome_zip_result
 
       - name: download and unpack into icon folder
         delegate_to: localhost
         ansible.posix.synchronize:
-          src: "{{ fontawesome_zip_result.unarchive.dest }}/"
-          dest: "{{ fontawesome_dir_result.file.path }}/"
+          src: "/tmp/fontawesome-free-6.1.1-desktop/"
+          dest: "{{ fontawesome_dir_result.path }}/"
           delete: yes
           recursive: yes
 
       - name: clean up tmp download dir
         ansible.builtin.file:
-          path: "{{ fontawesome_zip_result.unarchive.dest }}"
+          path: "/tmp/fontawesome-free-6.1.1-desktop/"
           state: absent
+
+      - name: ensure correct ownership
+        ansible.builtin.file:
+          path: "{{ fontawesome_dir_result.path }}"
+          group: "{{ ansible_user_id }}"
+          owner: "{{ ansible_user_id }}"
+          recurse: yes
