@@ -14,3 +14,8 @@ pip install ansible
 ```sh
 ansible-playbook main.yml -i inventory -K
 ```
+
+# TODO
+
+- Add instruction for: `pip install pynvim`
+- Add instruction for: `yarn add global neovim`
