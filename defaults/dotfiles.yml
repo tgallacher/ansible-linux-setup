@@ -12,7 +12,6 @@ dotfiles_files:
   - .zshenv
   # Spell out config child dirs directly to avoid overriding any manual config added
   # by not installing an app through this automation script
-  - .config/.colors
   - .config/.scripts
   - .config/alacritty
   - .config/bspwm
