@@ -8,6 +8,7 @@ dotfiles_home: "~"
 dotfiles_files:
   - .gitconfig
   - .gitignore
+  - .xprofile
   - .xinitrc
   - .zshenv
   # Spell out config child dirs directly to avoid overriding any manual config added
