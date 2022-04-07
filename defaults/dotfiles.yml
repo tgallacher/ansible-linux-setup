@@ -17,6 +17,7 @@ dotfiles_files:
   - .config/alacritty
   - .config/bspwm
   - .config/dunst
+  - .config/networkmanager-dmenu
   - .config/nvim
   - .config/polybar
   - .config/sxhkd
